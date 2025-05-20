@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Customer to Firebase</title>
+</head>
+<body>
+  <h2>Add Customer</h2>
+
+  <form id="customerForm">
+    <input type="text" id="name" placeholder="Name" required><br><br>
+    <input type="text" id="email" placeholder="Email" required><br><br>
+    <input type="text" id="contact" placeholder="Contact" required><br><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="status"></p>
+
+  <!-- Firebase SDK and your script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAUEvn6O661kDfjgXe7ipDcnvMLYV4XWaQ",
+      authDomain: "database-for-customers-9a6e4.firebaseapp.com",
+      projectId: "database-for-customers-9a6e4",
+      storageBucket: "database-for-customers-9a6e4.firebasestorage.app",
+      messagingSenderId: "1063566180989",
+      appId: "1:1063566180989:web:60f973b22c86eeb3432714",
+      measurementId: "G-Z8P6PMGR7F"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Handle form submission
+    const form = document.getElementById("customerForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const contact = document.getElementById("contact").value;
+
+      try {
+        await addDoc(collection(db, "customers"), {
+          name,
+          email,
+          contact
+        });
+        document.getElementById("status").innerText = "✅ Customer added successfully!";
+        form.reset();
+      } catch (error) {
+        console.error("❌ Error adding customer: ", error);
+        document.getElementById("status").innerText = "❌ Failed to add customer.";
+      }
+    });
+  </script>
+</body>
+</html>
